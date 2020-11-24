@@ -1,0 +1,6 @@
+# Intellij
+.idea/
+alternbot.iml
+
+# Builds
+target/
