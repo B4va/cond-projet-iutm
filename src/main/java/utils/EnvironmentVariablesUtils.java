@@ -22,10 +22,10 @@ public class EnvironmentVariablesUtils {
   private static final Logger LOGGER = buildLogger(EnvironmentVariablesUtils.class);
   private static final String ENVIRONMENT_VARIABLES_FILE = "/ENVIRONMENT.properties";
 
-  private static final String ERR_GET_INT = "La variable d'environnement '{}' ne peut pas être convertie en Integer";
-  private static final String ERR_GET_BOOLEAN = "La variable d'environnement '{}' ne peut pas être convertie en Boolean";
+  private static final String ERR_GET_INT = "La variable d'environnement '{}' ne peut pas être convertie en Integer.";
+  private static final String ERR_GET_BOOLEAN = "La variable d'environnement '{}' ne peut pas être convertie en Boolean.";
   private static final String ERR_READ_FILE = "Impossible de lire le fichier de variables d'environnement.";
-  private static final String ERR_FIND_VAR = "La variable d'environnement '{}' est introuvable";
+  private static final String ERR_FIND_VAR = "La variable d'environnement '{}' est introuvable.";
   private static final String ERR_NO_FILE = "Le fichier de configuration des variables d'environnement est introuvable.";
 
   /**
