@@ -14,8 +14,8 @@ public class LoggerUtils {
    * @param c classe concernée par l'instance
    * @return logger
    */
-  @SuppressWarnings("rawtypes")
-  public static Logger build(Class c) {
+  public static Logger buildLogger(Class c) {
     return LogManager.getLogger(c.getSimpleName());
   }
+
 }
