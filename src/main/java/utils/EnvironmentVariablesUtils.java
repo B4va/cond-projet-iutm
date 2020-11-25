@@ -24,9 +24,33 @@ public class EnvironmentVariablesUtils {
 
   private static final String ERR_GET_INT = "La variable d'environnement '{}' ne peut pas être convertie en Integer.";
   private static final String ERR_GET_BOOLEAN = "La variable d'environnement '{}' ne peut pas être convertie en Boolean.";
-  private static final String ERR_READ_FILE = "Impossible de lire le fichier de variables d'environnement.";
-  private static final String ERR_FIND_VAR = "La variable d'environnement '{}' est introuvable.";
-  private static final String ERR_NO_FILE = "Le fichier de configuration des variables d'environnement est introuvable.";
+  private static final String ERR_READ_FILE = "La variable {} n'est pas configurée. Impossible de lire le fichier de variables d'environnement.";
+  private static final String MSG_NO_VAR = "La variable d'environnement '{}' n'est pas configurée.";
+  private static final String MSG_NO_FILE = "La variable {} n'est pas configurée. Aucun fichier de configuration des variables d'environnement.";
+  public static final String MSG_DEFAULT_VALUE = "Valeur par défaut de '{}' : {}.";
+
+  /**
+   * Accès à une variable d'environnement de type {@link Integer} ou à sa valeur par défaut.
+   *
+   * @param variable     nom de la variable
+   * @param defaultValue valeur par défaut
+   * @return variable d'environnement ou variable par défaut
+   */
+  public static int getInt(String variable, int defaultValue) {
+    String var = get(variable);
+    if (Objects.isNull(var)) {
+      LOGGER.warn(MSG_DEFAULT_VALUE, variable, defaultValue);
+      return defaultValue;
+    } else {
+      try {
+        return Integer.parseInt(get(variable));
+      } catch (NumberFormatException e) {
+        LOGGER.error(ERR_GET_INT, variable);
+        LOGGER.warn(MSG_DEFAULT_VALUE, variable, defaultValue);
+        return defaultValue;
+      }
+    }
+  }
 
   /**
    * Accès à une variable d'environnement de type {@link Integer}.
@@ -35,14 +59,37 @@ public class EnvironmentVariablesUtils {
    * @return variable d'environnement
    */
   public static int getInt(String variable) {
-    try {
-      return Integer.parseInt(get(variable));
-    } catch (NumberFormatException e) {
-      e.printStackTrace();
-      LOGGER.error(ERR_GET_INT, variable);
-      System.exit(ErrorCodesUtils.ENVIRONMENT_VARIABLE);
+    return getInt(variable, 0);
+  }
+
+  /**
+   * Accès à une variable d'environnement de type {@link Boolean} ou à sa valeur par défaut.
+   *
+   * @param variable     nom de la variable
+   * @param defaultValue valeur par défaut
+   * @return variable d'environnement ou variable par défaut
+   */
+  public static boolean getBoolean(String variable, boolean defaultValue) {
+    String var = get(variable);
+    if (Objects.isNull(var)) {
+      LOGGER.warn(MSG_DEFAULT_VALUE, variable, defaultValue);
+      return defaultValue;
+    } else {
+      var = var.toLowerCase().trim();
+      if (var.equals("true")) {
+        return true;
+      } else if (var.equals("false")) {
+        return false;
+      } else {
+        try {
+          throw new ConfigurationException();
+        } catch (ConfigurationException e) {
+          LOGGER.error(ERR_GET_BOOLEAN, variable);
+          LOGGER.warn(MSG_DEFAULT_VALUE, variable, defaultValue);
+          return defaultValue;
+        }
+      }
     }
-    return 0;
   }
 
   /**
@@ -52,21 +99,24 @@ public class EnvironmentVariablesUtils {
    * @return variable d'environnement
    */
   public static boolean getBoolean(String variable) {
-    String var = get(variable).toLowerCase();
-    if (var.equals("true")) {
-      return true;
-    } else if (var.equals("false")) {
-      return false;
+    return getBoolean(variable, false);
+  }
+
+  /**
+   * Accès à une variable d'environnement de type {@link String} ou à sa valeur par défaut.
+   *
+   * @param variable     nom de la variable
+   * @param defaultValue valeur par défaut
+   * @return variable d'environnement ou variable par défaut
+   */
+  public static String getString(String variable, String defaultValue) {
+    String var = get(variable);
+    if (Objects.isNull(var)) {
+      LOGGER.warn(MSG_DEFAULT_VALUE, variable, defaultValue);
+      return defaultValue;
     } else {
-      try {
-        throw new ConfigurationException();
-      } catch (ConfigurationException e) {
-        e.printStackTrace();
-        LOGGER.error(ERR_GET_BOOLEAN, variable);
-        System.exit(ErrorCodesUtils.ENVIRONMENT_VARIABLE);
-      }
+      return var;
     }
-    return false;
   }
 
   /**
@@ -76,7 +126,7 @@ public class EnvironmentVariablesUtils {
    * @return variable d'environnement
    */
   public static String getString(String variable) {
-    return get(variable);
+    return getString(variable, null);
   }
 
   private static String get(String variable) {
@@ -85,32 +135,26 @@ public class EnvironmentVariablesUtils {
   }
 
   private static String getFromFile(String variable) {
-    String envFile = getFile();
+    String envFile = getFile(variable);
     try (FileInputStream inputStream = new FileInputStream(envFile)) {
       Properties prop = new Properties();
       prop.load(inputStream);
       return Optional.ofNullable(prop.getProperty(variable))
         .orElseThrow(ConfigurationException::new);
     } catch (IOException ioException) {
-      ioException.printStackTrace();
-      LOGGER.error(ERR_READ_FILE);
-      System.exit(ErrorCodesUtils.ENVIRONMENT_VARIABLE);
+      LOGGER.warn(ERR_READ_FILE, variable);
     } catch (ConfigurationException configurationException) {
-      configurationException.printStackTrace();
-      LOGGER.error(ERR_FIND_VAR, variable);
-      System.exit(ErrorCodesUtils.ENVIRONMENT_VARIABLE);
+      LOGGER.warn(MSG_NO_VAR, variable);
     }
     return null;
   }
 
-  private static String getFile() {
+  private static String getFile(String variable) {
     String envFile = null;
     try {
       envFile = EnvironmentVariablesUtils.class.getResource(ENVIRONMENT_VARIABLES_FILE).getFile();
     } catch (NullPointerException e) {
-      e.printStackTrace();
-      LOGGER.error(ERR_NO_FILE);
-      System.exit(ErrorCodesUtils.ENVIRONMENT_VARIABLE);
+      LOGGER.warn(MSG_NO_FILE, variable);
     }
     return envFile;
   }

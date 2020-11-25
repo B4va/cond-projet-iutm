@@ -23,13 +23,18 @@ import java.net.URI;
 @Order(50)
 public class LoggerConfiguration extends ConfigurationFactory {
 
+  private static final String DEFAULT_LEVEL = "WARN";
+  private static final String DEFAULT_PATTERN = "%d{dd-MM-yyyy - HH:mm:ss} [%t] %-6level| %logger{36} : %msg%n";
+
   private static Configuration createConfiguration(final String name, ConfigurationBuilder<BuiltConfiguration> builder) {
-    final String level = EnvironmentVariablesUtils.getString(EnvironmentVariablesUtils.LOG_LEVEL).toUpperCase();
-    final String pattern = EnvironmentVariablesUtils.getString(EnvironmentVariablesUtils.LOG_FORMAT);
+    final String level = EnvironmentVariablesUtils
+      .getString(EnvironmentVariablesUtils.LOG_LEVEL, DEFAULT_LEVEL).toUpperCase();
+    final String pattern = EnvironmentVariablesUtils
+      .getString(EnvironmentVariablesUtils.LOG_FORMAT, DEFAULT_PATTERN);
     final String appender = "stdout";
     builder.setConfigurationName(name);
-    builder.setStatusLevel(Level.getLevel(level));
-    AppenderComponentBuilder appenderBuilder = builder.newAppender(appender, "CONSOLE").
+    builder.setStatusLevel(Level.ERROR);
+    AppenderComponentBuilder appenderBuilder = builder.newAppender(appender, "console").
       addAttribute("target", ConsoleAppender.Target.SYSTEM_OUT);
     appenderBuilder.add(builder.newLayout("PatternLayout")
       .addAttribute("pattern", pattern));
