@@ -81,13 +81,9 @@ public class EnvironmentVariablesUtils {
       } else if (var.equals("false")) {
         return false;
       } else {
-        try {
-          throw new ConfigurationException();
-        } catch (ConfigurationException e) {
-          LOGGER.error(ERR_GET_BOOLEAN, variable);
-          LOGGER.warn(MSG_DEFAULT_VALUE, variable, defaultValue);
-          return defaultValue;
-        }
+        LOGGER.error(ERR_GET_BOOLEAN, variable);
+        LOGGER.warn(MSG_DEFAULT_VALUE, variable, defaultValue);
+        return defaultValue;
       }
     }
   }
@@ -130,19 +126,24 @@ public class EnvironmentVariablesUtils {
   }
 
   private static String get(String variable) {
-    String v = System.getenv(variable);
-    return Objects.nonNull(v) ? v : getFromFile(variable);
+    return Optional.ofNullable(System.getenv(variable))
+      .orElse(getFromFile(variable));
   }
 
   private static String getFromFile(String variable) {
     String envFile = getFile(variable);
-    try (FileInputStream inputStream = new FileInputStream(envFile)) {
-      Properties prop = new Properties();
-      prop.load(inputStream);
-      return Optional.ofNullable(prop.getProperty(variable))
-        .orElseThrow(ConfigurationException::new);
+    try {
+      assert envFile != null;
+      try (FileInputStream inputStream = new FileInputStream(envFile)) {
+        Properties prop = new Properties();
+        prop.load(inputStream);
+        return Optional.ofNullable(prop.getProperty(variable))
+          .orElseThrow(ConfigurationException::new);
+      }
     } catch (IOException ioException) {
       LOGGER.warn(ERR_READ_FILE, variable);
+    } catch (NullPointerException nullPointerException) {
+      LOGGER.warn(MSG_NO_FILE, variable);
     } catch (ConfigurationException configurationException) {
       LOGGER.warn(MSG_NO_VAR, variable);
     }
@@ -150,12 +151,10 @@ public class EnvironmentVariablesUtils {
   }
 
   private static String getFile(String variable) {
-    String envFile = null;
     try {
-      envFile = EnvironmentVariablesUtils.class.getResource(ENVIRONMENT_VARIABLES_FILE).getFile();
+      return EnvironmentVariablesUtils.class.getResource(ENVIRONMENT_VARIABLES_FILE).getFile();
     } catch (NullPointerException e) {
-      LOGGER.warn(MSG_NO_FILE, variable);
+      return null;
     }
-    return envFile;
   }
 }
