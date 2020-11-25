@@ -1,3 +1,6 @@
+# Variables d'environnement
+ENVIRONMENT.properties
+
 # Intellij
 .idea/
 alternbot.iml
