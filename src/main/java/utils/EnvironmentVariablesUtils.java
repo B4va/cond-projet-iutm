@@ -18,6 +18,9 @@ public class EnvironmentVariablesUtils {
 
   public static final String LOG_LEVEL = "LOG_LEVEL";
   public static final String LOG_FORMAT = "LOG_FORMAT";
+  public static final String DB_URL = "DB_URL";
+  public static final String DB_USER = "DB_USER";
+  public static final String PASSWORD = "DB_PASSWORD";
 
   private static final Logger LOGGER = buildLogger(EnvironmentVariablesUtils.class);
   private static final String ENVIRONMENT_VARIABLES_FILE = "/ENVIRONMENT.properties";
