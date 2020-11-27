@@ -5,10 +5,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 import java.util.Objects;
-import java.util.Optional;
 
 /**
- * Gestion de l'accès à la base de données.
+ * Gestion de l'accès à la base de données, avec paramétrage.
  */
 public class DbUtils {
 
