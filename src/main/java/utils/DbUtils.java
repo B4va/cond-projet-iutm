@@ -1,12 +1,10 @@
 package utils;
 
 import config.HibernateConfiguration;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.jpa.boot.spi.EntityManagerFactoryBuilder;
 
-import javax.persistence.EntityManager;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -26,7 +24,9 @@ public class DbUtils {
    */
   public static synchronized SessionFactory getSessionFactory() {
     Configuration configuration = HibernateConfiguration.getConfiguration();
-    return Optional.ofNullable(sessionFactory)
-      .orElse(configuration.buildSessionFactory());
+    if (Objects.isNull(sessionFactory)) {
+      sessionFactory = configuration.buildSessionFactory();
+    }
+    return sessionFactory;
   }
 }
