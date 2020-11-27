@@ -32,6 +32,9 @@ public class EnvironmentVariablesUtils {
   private static final String MSG_NO_FILE = "La variable {} n'est pas configurée. Aucun fichier de configuration des variables d'environnement.";
   public static final String MSG_DEFAULT_VALUE = "Valeur par défaut de '{}' : {}.";
 
+  private EnvironmentVariablesUtils() {
+  }
+
   /**
    * Accès à une variable d'environnement de type {@link Integer} ou à sa valeur par défaut.
    *

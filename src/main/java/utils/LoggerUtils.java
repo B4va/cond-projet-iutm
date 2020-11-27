@@ -8,6 +8,9 @@ import org.apache.logging.log4j.Logger;
  */
 public class LoggerUtils {
 
+  private LoggerUtils() {
+  }
+
   /**
    * Construit une instance du {@link Logger}.
    *

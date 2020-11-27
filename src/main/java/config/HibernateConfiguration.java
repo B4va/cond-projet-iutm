@@ -10,6 +10,9 @@ import utils.EnvironmentVariablesUtils;
  */
 public class HibernateConfiguration {
 
+  private HibernateConfiguration() {
+  }
+
   /**
    * Paramètre la configuration Hibernate.
    *
