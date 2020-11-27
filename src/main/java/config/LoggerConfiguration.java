@@ -24,25 +24,37 @@ import java.net.URI;
 public class LoggerConfiguration extends ConfigurationFactory {
 
   private static final String DEFAULT_LEVEL = "WARN";
-  private static final String DEFAULT_PATTERN = "%d{dd-MM-yyyy - HH:mm:ss} [%t] %-6level| %logger{36} : %msg%n";
+  private static final String DEFAULT_PATTERN = "%d{dd-MM-yyyy - HH:mm:ss} [%t] %level | %logger{36} | %msg%n";
+  private static final String APPENDER = "stdout";
 
   private static Configuration createConfiguration(final String name, ConfigurationBuilder<BuiltConfiguration> builder) {
     final String level = EnvironmentVariablesUtils
       .getString(EnvironmentVariablesUtils.LOG_LEVEL, DEFAULT_LEVEL).toUpperCase();
     final String pattern = EnvironmentVariablesUtils
       .getString(EnvironmentVariablesUtils.LOG_FORMAT, DEFAULT_PATTERN);
-    final String appender = "stdout";
     builder.setConfigurationName(name);
     builder.setStatusLevel(Level.ERROR);
-    AppenderComponentBuilder appenderBuilder = builder.newAppender(appender, "console").
+    AppenderComponentBuilder console = builder.newAppender(APPENDER, "console").
       addAttribute("target", ConsoleAppender.Target.SYSTEM_OUT);
-    appenderBuilder.add(builder.newLayout("PatternLayout")
+    console.add(builder.newLayout("PatternLayout")
       .addAttribute("pattern", pattern));
-    builder
-      .add(appenderBuilder)
-      .add(builder.newRootLogger(Level.getLevel(level))
-        .add(builder.newAppenderRef(appender)));
+    setLoggers(builder, level, console);
     return builder.build();
+  }
+
+  private static void setLoggers(ConfigurationBuilder<BuiltConfiguration> builder, String level, AppenderComponentBuilder console) {
+    builder.add(console)
+      .add(builder.newRootLogger(Level.getLevel(level))
+        .add(builder.newAppenderRef(APPENDER)))
+      .add(builder.newLogger("org.hibernate", Level.OFF).
+        add(builder.newAppenderRef(APPENDER)).
+        addAttribute("additivity", false))
+      .add(builder.newLogger("org.hibernate.SQL", Level.getLevel(level)).
+        add(builder.newAppenderRef(APPENDER)).
+        addAttribute("additivity", false))
+      .add(builder.newLogger("org.hibernate.type.descriptor.sql", Level.getLevel(level)).
+        add(builder.newAppenderRef(APPENDER)).
+        addAttribute("additivity", false));
   }
 
   @Override

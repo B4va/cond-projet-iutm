@@ -19,7 +19,7 @@ public class MigrationsLauncher {
     try {
       final String url = EnvironmentVariablesUtils.getString(EnvironmentVariablesUtils.DB_URL);
       final String user = EnvironmentVariablesUtils.getString(EnvironmentVariablesUtils.DB_USER);
-      final String password = EnvironmentVariablesUtils.getString(EnvironmentVariablesUtils.PASSWORD);
+      final String password = EnvironmentVariablesUtils.getString(EnvironmentVariablesUtils.DB_PASSWORD);
       Flyway flyway = Flyway.configure().dataSource(url, user, password).load();
       execute(flyway, args);
     } catch (Exception e) {
