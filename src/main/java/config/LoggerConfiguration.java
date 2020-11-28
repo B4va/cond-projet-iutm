@@ -23,7 +23,7 @@ import java.net.URI;
 @Order(50)
 public class LoggerConfiguration extends ConfigurationFactory {
 
-  private static final String DEFAULT_LEVEL = "WARN";
+  private static final String DEFAULT_LEVEL = "INFO";
   private static final String APP_APPENDER = "app";
   private static final String EXT_APPENDER = "ext";
   private static final String APP_PATTERN = "%d{dd-MM-yyyy - HH:mm:ss} [%t] %level | %logger{36} | %msg%n";
