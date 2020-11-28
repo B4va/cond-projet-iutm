@@ -46,15 +46,15 @@ public class LoggerConfiguration extends ConfigurationFactory {
     builder.add(console)
       .add(builder.newRootLogger(Level.getLevel(level))
         .add(builder.newAppenderRef(APPENDER)))
-      .add(builder.newLogger("org.hibernate", Level.OFF).
-        add(builder.newAppenderRef(APPENDER)).
-        addAttribute("additivity", false))
-      .add(builder.newLogger("org.hibernate.SQL", Level.getLevel(level)).
-        add(builder.newAppenderRef(APPENDER)).
-        addAttribute("additivity", false))
-      .add(builder.newLogger("org.hibernate.type.descriptor.sql", Level.getLevel(level)).
-        add(builder.newAppenderRef(APPENDER)).
-        addAttribute("additivity", false));
+      .add(builder.newLogger("org.hibernate", Level.OFF)
+        .add(builder.newAppenderRef(APPENDER))
+        .addAttribute("additivity", false))
+      .add(builder.newLogger("org.hibernate.SQL", Level.getLevel(level))
+        .add(builder.newAppenderRef(APPENDER))
+        .addAttribute("additivity", false))
+      .add(builder.newLogger("org.hibernate.type.descriptor.sql", Level.getLevel(level))
+        .add(builder.newAppenderRef(APPENDER))
+        .addAttribute("additivity", false));
   }
 
   @Override

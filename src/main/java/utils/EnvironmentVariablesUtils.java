@@ -21,6 +21,7 @@ public class EnvironmentVariablesUtils {
   public static final String DB_URL = "DB_URL";
   public static final String DB_USER = "DB_USER";
   public static final String DB_PASSWORD = "DB_PASSWORD";
+  public static final String BOT_TOKEN = "BOT_TOKEN";
 
   private static final Logger LOGGER = buildLogger(EnvironmentVariablesUtils.class);
   private static final String ENVIRONMENT_VARIABLES_FILE = "/ENVIRONMENT.properties";

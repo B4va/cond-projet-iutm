@@ -13,6 +13,7 @@ public class MigrationsLauncher {
   public static final String MIGRATE = "-migrate";
   public static final String CLEAN = "-clean";
   private static final Logger LOGGER = LoggerUtils.buildLogger(MigrationsLauncher.class);
+  private static final String LOCATION = "/migrations";
 
   /**
    * Commandes disponibles : migrate, repair, clean.
@@ -22,7 +23,9 @@ public class MigrationsLauncher {
       final String url = EnvironmentVariablesUtils.getString(EnvironmentVariablesUtils.DB_URL);
       final String user = EnvironmentVariablesUtils.getString(EnvironmentVariablesUtils.DB_USER);
       final String password = EnvironmentVariablesUtils.getString(EnvironmentVariablesUtils.DB_PASSWORD);
-      Flyway flyway = Flyway.configure().dataSource(url, user, password).load();
+      Flyway flyway = Flyway.configure()
+        .locations("filesystem:" + MigrationsLauncher.class.getResource(LOCATION).getFile())
+        .dataSource(url, user, password).load();
       execute(flyway, args);
     } catch (Exception e) {
       e.printStackTrace();
