@@ -17,7 +17,7 @@ public class LoggerUtils {
    * @param c classe concernée par l'instance
    * @return logger
    */
-  public static Logger buildLogger(Class c) {
+  public static <T> Logger buildLogger(Class<T> c) {
     return LogManager.getLogger(c.getSimpleName());
   }
 

@@ -10,6 +10,8 @@ import utils.LoggerUtils;
  */
 public class MigrationsLauncher {
 
+  public static final String MIGRATE = "-migrate";
+  public static final String CLEAN = "-clean";
   private static final Logger LOGGER = LoggerUtils.buildLogger(MigrationsLauncher.class);
 
   /**
@@ -34,11 +36,11 @@ public class MigrationsLauncher {
       LOGGER.error("Paramètre manquant.");
     } else {
       switch (args[0]) {
-        case "-migrate":
+        case MIGRATE:
           LOGGER.info("RUN Migrate.");
           flyway.migrate();
           break;
-        case "-clean":
+        case CLEAN:
           LOGGER.info("RUN Clean.");
           flyway.clean();
           break;

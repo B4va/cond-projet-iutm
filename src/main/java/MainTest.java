@@ -1,8 +1,11 @@
+import app.database.MigrationsLauncher;
+import app.database.SeedLauncher;
 import models.Test;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import utils.DbUtils;
-import utils.EnvironmentVariablesUtils;
+
+import java.util.List;
 
 import static utils.LoggerUtils.buildLogger;
 
@@ -14,13 +17,11 @@ public class MainTest {
   private static final Logger LOGGER = buildLogger(MainTest.class);
 
   public static void main(String[] args) {
-    if (EnvironmentVariablesUtils.getBoolean("TEST_B", true)) {
-      LOGGER.info(EnvironmentVariablesUtils.getString("TEST_S", "défaut"));
-      LOGGER.info(EnvironmentVariablesUtils.getInt("TEST_I", 1) * 2);
-    }
+    MigrationsLauncher.main(new String[]{MigrationsLauncher.MIGRATE});
+    SeedLauncher.main(null);
     Session session = DbUtils.getSessionFactory().openSession();
-    Test test = session.get(Test.class, 1);
-    LOGGER.info("ID : " + test.getId() + " ; TEXT : " + test.getText());
+    List<Test> tests = DbUtils.getAll(session, Test.class);
     session.close();
+    tests.forEach(test -> LOGGER.info("Id : " + test.getId() + " - Text : " + test.getText()));
   }
 }
