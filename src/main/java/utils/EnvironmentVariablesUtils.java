@@ -133,8 +133,9 @@ public class EnvironmentVariablesUtils {
   }
 
   private static String get(String variable) {
-    return Optional.ofNullable(System.getenv(variable))
-      .orElse(getFromFile(variable));
+    return Objects.nonNull(System.getenv(variable))
+      ? System.getenv(variable)
+      : getFromFile(variable);
   }
 
   private static String getFromFile(String variable) {
