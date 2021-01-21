@@ -1,6 +1,7 @@
 package models;
 
 import org.junit.jupiter.api.*;
+import sun.nio.cs.ext.Big5_HKSCS_2001;
 
 import javax.persistence.PersistenceException;
 import java.text.ParseException;
@@ -22,12 +23,18 @@ public class TestSession implements TestModel {
   private static Session SESSION;
   private static Schedule SCHEDULE;
   private static final String PROMOTION_TEST = "promotion test";
+  private static final String URL_TEST = "url.com";
   private static final String UPDATED_NAME = "Updated name";
   private static final String DATE = "01-01-2021";
+  private static final String UPDATED_DATE = "02-02-2022";
   private static final String START_TIME = "14:00";
+  private static final String UPDATED_START = "15:00";
   private static final String END_TIME = "15:00";
+  private static final String UPDATED_END = "16:00";
   private static final String LOCATION = "A01";
+  private static final String UPDATED_LOCATION = "B02";
   private static final String TEACHER = "M. Prof";
+  private static final String UPDATED_TEACHER = "Mme Teach";
   private static final String NAME = "Info";
 
   @AfterAll
@@ -46,7 +53,7 @@ public class TestSession implements TestModel {
   @Order(1)
   @Override
   public void testCreate() {
-    SCHEDULE = new Schedule(PROMOTION_TEST);
+    SCHEDULE = new Schedule(PROMOTION_TEST, URL_TEST);
     ID_SCHEDULE = SCHEDULE.create();
     try {
       SESSION = new Session(NAME, TEACHER, LOCATION, stringToDate(DATE),
@@ -84,7 +91,8 @@ public class TestSession implements TestModel {
       fail();
     }
     session.setTeacher(null);
-    assertThrows(PersistenceException.class, session::create);
+    assertDoesNotThrow(session::create);
+    session.delete();
   }
 
   @Test
@@ -98,7 +106,8 @@ public class TestSession implements TestModel {
       fail();
     }
     session.setLocation(null);
-    assertThrows(PersistenceException.class, session::create);
+    assertDoesNotThrow(session::create);
+    session.delete();
   }
 
   @Test
@@ -170,7 +179,8 @@ public class TestSession implements TestModel {
       () -> assertEquals(session.getSchedule().getId(), SESSION.getSchedule().getId()),
       () -> assertEquals(session.getDate(), SESSION.getDate()),
       () -> assertEquals(session.getStart(), SESSION.getStart()),
-      () -> assertEquals(session.getEnd(), SESSION.getEnd())
+      () -> assertEquals(session.getEnd(), SESSION.getEnd()),
+      () -> assertFalse(session.isUpdated())
     );
   }
 
@@ -187,7 +197,7 @@ public class TestSession implements TestModel {
   public void testUpdate_teacher_null() {
     Session session = Session.read(ID_SESSION, Session.class);
     session.setTeacher(null);
-    assertThrows(PersistenceException.class, session::update);
+    assertDoesNotThrow(session::update);
   }
 
   @Test
@@ -195,7 +205,7 @@ public class TestSession implements TestModel {
   public void testUpdate_location_null() {
     Session session = Session.read(ID_SESSION, Session.class);
     session.setLocation(null);
-    assertThrows(PersistenceException.class, session::update);
+    assertDoesNotThrow(session::update);
   }
 
   @Test
@@ -235,9 +245,28 @@ public class TestSession implements TestModel {
   @Override
   public void testUpdate() {
     SESSION.setName(UPDATED_NAME);
+    SESSION.setLocation(UPDATED_LOCATION);
+    SESSION.setTeacher(UPDATED_TEACHER);
+    try {
+      SESSION.setDate(stringToDate(UPDATED_DATE));
+      SESSION.setStart(stringToTime(UPDATED_START));
+      SESSION.setEnd(stringToTime(UPDATED_END));
+    } catch (ParseException e) {
+      fail();
+    }
+    SESSION.setUpdated(true);
     SESSION.update();
     SESSION = Model.read(ID_SESSION, Session.class);
-    assertEquals(SESSION.getName(), UPDATED_NAME);
+    assertAll(
+      () -> assertEquals(SESSION.getName(), UPDATED_NAME),
+      () -> assertEquals(SESSION.getLocation(), UPDATED_LOCATION),
+      () -> assertEquals(SESSION.getTeacher(), UPDATED_TEACHER),
+      () -> assertEquals(SESSION.getDate(), stringToDate(UPDATED_DATE)),
+      () -> assertEquals(SESSION.getStart(), stringToTime(UPDATED_START)),
+      () -> assertEquals(SESSION.getEnd(), stringToTime(UPDATED_END)),
+      () -> assertTrue(SESSION.isUpdated())
+    );
+
   }
 
   @Test

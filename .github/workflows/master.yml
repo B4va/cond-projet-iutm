@@ -33,8 +33,9 @@ jobs:
       DB_USER: postgres
       DB_PASSWORD: muchsecurity
       BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-      CHANNEL_TEST: ${{ secrets.CHANNEL_TEST }}
       SERVER_TEST: ${{ secrets.SERVER_TEST }}
+      CHANNEL_TEST: ${{ secrets.CHANNEL_TEST }}
+      SCHEDULE_URL: ${{ secrets.SCHEDULE_URL }}
 
     steps:
     - name: Checkout du code

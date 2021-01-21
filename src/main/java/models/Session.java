@@ -21,10 +21,10 @@ public class Session extends Model {
   @Column(name = "name", nullable = false)
   private String name;
 
-  @Column(name = "teacher", nullable = false)
+  @Column(name = "teacher")
   private String teacher;
 
-  @Column(name = "location", nullable = false)
+  @Column(name = "location")
   private String location;
 
   @Column(name = "date_session", nullable = false)
@@ -38,6 +38,9 @@ public class Session extends Model {
   @Column(name = "end_time", nullable = false)
   @Temporal(TemporalType.TIME)
   private Date end;
+
+  @Column(name = "updated")
+  private boolean updated;
 
   @ManyToOne
   @JoinColumn(name = "schedule_id", nullable = false)
@@ -112,6 +115,14 @@ public class Session extends Model {
 
   public void setEnd(Date end) {
     this.end = end;
+  }
+
+  public boolean isUpdated() {
+    return updated;
+  }
+
+  public void setUpdated(boolean updated) {
+    this.updated = updated;
   }
 
   public Schedule getSchedule() {
