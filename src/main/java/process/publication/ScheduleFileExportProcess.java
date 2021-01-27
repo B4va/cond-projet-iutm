@@ -18,8 +18,8 @@ import static java.util.Objects.isNull;
 /**
  * Process permettant l'export et la publication de l'emploi du temps sous forme d'un fichier iCal.
  */
-public class ScheduleFileExport extends Publication {
-  private static final Logger LOGGER = LoggerUtils.buildLogger(ScheduleFileExport.class);
+public class ScheduleFileExportProcess extends Publication {
+  private static final Logger LOGGER = LoggerUtils.buildLogger(ScheduleFileExportProcess.class);
   private static final String ICAL_FILE_PREFIX = "edt_";
 
   /**

@@ -12,10 +12,10 @@ import static utils.EnvironmentVariablesUtils.SERVER_TEST;
 import static utils.JDAUtils.initializeJDA;
 
 /**
- * Classe de test de {@link ScheduleFileExport}.
+ * Classe de test de {@link ScheduleFileExportProcess}.
  */
-public class TestScheduleFileExport {
-  private static final ScheduleFileExport PROCESS = new ScheduleFileExport();
+public class TestScheduleFileExportProcess {
+  private static final ScheduleFileExportProcess PROCESS = new ScheduleFileExportProcess();
 
   private static String TEST_SERVER_REF = "";
   private static final String INVALID_SERVER_REF = "5555";
