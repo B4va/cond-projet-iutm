@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenerationTime;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Calendar;
 import java.util.Date;
 
 @Entity
@@ -138,5 +139,15 @@ public class Session extends Model {
       start.equals(session.getStart()) &&
       end.equals(session.getEnd()) &&
       date.equals(session.getDate());
+  }
+
+  /**
+   * Indique si le cours est considéré comme passé.
+   * @return true si la date du cours précède le jour actuel (sans prise en compte de l'horaire
+   */
+  public boolean isPast() {
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(Calendar.DAY_OF_MONTH, -1);
+    return date.before(calendar.getTime());
   }
 }
