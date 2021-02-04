@@ -1,1 +1,1 @@
-worker: java -jar target/alternbot-1.2.jar
+worker: java -jar target/alternbot-1.3.jar
