@@ -1,8 +1,7 @@
 package exceptions;
 
 /**
- * Exception retournée lorsqu'une tâche est invalide
- * {@link models.Task} à une fonctionnalité.
+ * Exception retournée lors de la réception de données au mauvais format.
  */
-public class InvalidDataException extends Exception{
+public class InvalidDataException extends Exception {
 }
