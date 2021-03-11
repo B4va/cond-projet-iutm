@@ -52,7 +52,7 @@ public abstract class Publication {
   protected ArrayList<String> decomposerMessage(String message){
       ArrayList<String> res = new ArrayList<String>();
       int nbDecomposition = message.length()/2000 + 1;
-      res.add("(1/"+nbDecomposition+")"+message.substring(0,1999));
+      res.add("(1/"+nbDecomposition+") "+message.substring(0,1999));
       for(int i = 1 ; i<nbDecomposition + 1;i++){
         boolean espaceTrouve = false;
         int j = 2000 * i;
@@ -60,7 +60,7 @@ public abstract class Publication {
           if(message.charAt(j) == ' ') espaceTrouve = true;
           j++;
         }
-        res.add(message.substring(2000*i,j));
+        res.add("("+i+"/"+nbDecomposition+") "+message.substring(2000*i,j));
       }
       return res;
   }
